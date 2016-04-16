@@ -42,7 +42,7 @@ REPO=
 
 while getopts :r:h FLAG; do
     case $FLAG in
-        r)  REPO=$FLAG
+        r)  REPO=$OPTARG
             ;;
         h)  usage
             ;;
@@ -57,7 +57,9 @@ fi
 
 # Set up git repos for profile data
 # Need SSH key first
-mkdir ~/.my_profile
+if [[ ! -d ~/.my_profile ]]; then
+    mkdir ~/.my_profile
+fi
 cd ~/.my_profile
 git clone $REPO
 
@@ -68,7 +70,7 @@ BACKUP="~/profile_backup"
 mkdir $BACKUP
 for ITEM in "${PROFILE[@]}"; do
     if [[ (-f ~/$ITEM && ! -L ~/$ITEM) || -d ~/$ITEM ]]; then
-        mv ~/$ITEM ~/$BACKUP/
+        mv ~/$ITEM $BACKUP/
         ln -s ~/$ITEM ~/.my_profile/$ITEM
     fi
 done
